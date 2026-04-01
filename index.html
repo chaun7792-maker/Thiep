@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Món Quà Bất Ngờ</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Hiệu ứng chữ chạy */
+        #credits-box {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            animation: scrollUp 20s linear forwards;
+        }
+
+        .name-item {
+            font-size: 28px;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #ffd700; /* Màu vàng kim loại sang trọng */
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes scrollUp {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-120%); }
+        }
+
+        /* Nút bấm mở thiệp */
+        #btn-open {
+            display: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            background: linear-gradient(45deg, #ff4d6d, #ff758f);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Thiệp chúc mừng */
+        #card {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 450px;
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 99;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="credits-box">
+        <p style="font-size: 20px; color: #fff;">DANH SÁCH NHẬN QUÀ...</p>
+        <div class="name-item">Nguyễn Văn A</div>
+        <div class="name-item">Trần Thị B</div>
+        <div class="name-item">Lê Văn C</div>
+        <div class="name-item">Hoàng Anh D</div>
+        <div class="name-item">Gia đình 10A1</div>
+        <div class="name-item">Và tất cả những người bạn thân yêu...</div>
+        <p>✨ ✨ ✨</p>
+    </div>
+
+    <button id="btn-open" onclick="startFireworks()">Mở Quà Ngay 🎁</button>
+
+    <div id="card">
+        <h1 style="color: #ff4d6d;">Happy Moments! 🎆</h1>
+        <p id="wishText">Chúc tất cả mọi người một năm mới rạng rỡ, học tập tốt và luôn hạnh phúc bên người thân yêu!</p>
+        <p><b>Trân trọng!</b></p>
+    </div>
+
+    <canvas id="fireworks"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        // Tự động hiện nút sau khi chạy xong (20 giây)
+        setTimeout(() => {
+            document.getElementById('credits-box').style.display = 'none';
+            document.getElementById('btn-open').style.display = 'block';
+        }, 18000);
+
+        function startFireworks() {
+            // Phát nhạc
+            const music = document.getElementById('bgMusic');
+            music.play().catch(() => {
+                console.log("Trình duyệt chặn tự động phát, cần tương tác người dùng.");
+            });
+
+            // Hiện thiệp
+            document.getElementById('btn-open').style.display = 'none';
+            document.getElementById('card').style.display = 'block';
+            document.body.style.background = "#fff0f3";
+
+            // Hiệu ứng pháo hoa liên tục
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
